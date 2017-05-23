@@ -17,6 +17,7 @@ import urllib2
 
 
 APPINDICATOR_ID = 'myappindicator'
+CHECK_INTERVAL_SEC = 5 * 60
 indicator = None
 iplist = [
     ('icmp', '122.201.23.145', 'Unitel',        '#f44336'),
@@ -66,7 +67,10 @@ def ping_alive(ip):
 
 def http_alive(url):
     # TODO quite immature -> ssl._create_unverified_context()
-    rsp = urllib2.urlopen(url, context=ssl._create_unverified_context())
+    try:
+        rsp = urllib2.urlopen(url, context=ssl._create_unverified_context())
+    except urllib2.URLError as e:
+        return False
     return rsp.getcode() == 200
 
 
@@ -75,7 +79,7 @@ def action():
 
     n = 0
     while True:
-        filename = 'icon%s.svg' % (n % 2)
+        filename = '/run/shm/check-beep-icon%s.svg' % (n % 2)
         with open(filename, 'w') as f:
             f.write("""<?xml version="1.0" encoding="UTF-8" standalone="no"?>""")
             f.write("""<svg width="%s" height="16">""" % (len(iplist) * 9 - 1))
@@ -93,7 +97,7 @@ def action():
 
         GObject.idle_add(
             indicator.set_icon,
-            os.path.abspath(filename),
+            filename,
             priority=GObject.PRIORITY_DEFAULT
         )
 
@@ -104,7 +108,7 @@ def action():
         #)
 
         n += 1 
-        time.sleep(3)
+        time.sleep(CHECK_INTERVAL_SEC)
 
 
 def main():
