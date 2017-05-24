@@ -14,6 +14,7 @@ from random import randint
 import subprocess
 import ssl
 import urllib2
+from datetime import datetime
 
 
 APPINDICATOR_ID = 'myappindicator'
@@ -28,7 +29,7 @@ iplist = [
     ('http', 'https://122.201.23.146:8000', 'SMSPro',       '#e91e63'),
     ('http', 'https://122.201.23.146:5000', 'TeamProgress', '#e91e63'),
     ('http', 'https://evisa.mn',            'eVisa',        '#e91e63'),
-    ('http', 'https://immigration.gov.mn',  b'ГИХГ сайт',    '#e91e63'),
+    ('http', 'https://immigration.gov.mn',  b'ГИХГ сайт',   '#e91e63'),
 ]
 
 
@@ -58,10 +59,22 @@ def get_svg_bar(offsetx, height, width, border, h, color):
     return svg_bar
 
 
+def log(message):
+    with open('/run/shm/check-beep.log') as f:
+        date_str = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        f.write("[%s] %s" % (date_str, message))
+
+
 def ping_alive(ip):
-    ping_response = subprocess.Popen(
-        ["/bin/ping", "-c1", "-w10", ip], stdout=subprocess.PIPE
-    ).stdout.read()
+    try:
+        ping_response = subprocess.Popen(
+            ["/bin/ping", "-c1", "-w10", ip], stdout=subprocess.PIPE
+        ).stdout.read()
+    except Exception as e:
+        log('Error during ping ' + ip)
+        log(e.message)
+        return False
+
     return 'Destination Host Unreachable' not in ping_response
 
 
@@ -70,6 +83,10 @@ def http_alive(url):
     try:
         rsp = urllib2.urlopen(url, context=ssl._create_unverified_context())
     except urllib2.URLError as e:
+        log(e.message)
+        return False
+    except Exception as e:
+        log(e.message)
         return False
     return rsp.getcode() == 200
 
