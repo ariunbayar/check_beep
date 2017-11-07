@@ -25,9 +25,8 @@ iplist = [
     ('icmp', '10.10.10.1',     'cisco 2800',    '#f44336'),
     ('icmp', '10.10.10.50',    'IPPBX',         '#2196f3'),
     ('icmp', '122.201.23.151', 'Backup server', '#4caf50'),
-    # ('icmp', '122.201.23.146', 'App server',    '#4caf50'),
-    ('http', 'https://122.201.23.146:8000', 'SMSPro',       '#e91e63'),
-    ('http', 'https://122.201.23.146:5000', 'TeamProgress', '#e91e63'),
+    ('http', 'https://app.evisa.mn',        'SMSPro',       '#e91e63'),
+    ('http', 'https://ajil.it/',            'TeamProgress', '#e91e63'),
     ('http', 'https://evisa.mn',            'eVisa',        '#e91e63'),
     ('http', 'https://immigration.gov.mn',  b'ГИХГ сайт',   '#e91e63'),
 ]
@@ -60,7 +59,7 @@ def get_svg_bar(offsetx, height, width, border, h, color):
 
 
 def log(message):
-    with open('/run/shm/check-beep.log') as f:
+    with open('/run/shm/check-beep.log', 'w') as f:
         date_str = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         f.write("[%s] %s" % (date_str, message))
 
@@ -75,7 +74,7 @@ def ping_alive(ip):
         log(e.message)
         return False
 
-    return 'Destination Host Unreachable' not in ping_response
+    return '1 received' in ping_response
 
 
 def http_alive(url):
@@ -124,7 +123,7 @@ def action():
         #    priority=GObject.PRIORITY_DEFAULT
         #)
 
-        n += 1 
+        n += 1
         time.sleep(CHECK_INTERVAL_SEC)
 
 

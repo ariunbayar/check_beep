@@ -15,7 +15,7 @@ Type=Application
 Terminal=true
 Exec=$script_dir/launch.sh
 Name=check-beep
-Comment=Ping and load URL to test availability
+Comment=Ping and load URL to test availability, Also launches nfcatd
 Icon=gnome-terminal
 EOL
 
