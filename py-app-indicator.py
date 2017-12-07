@@ -26,6 +26,8 @@ iplist = [
     ('icmp', '10.10.10.50',    'IPPBX',         '#2196f3'),
     ('icmp', '122.201.23.151', 'Backup server', '#4caf50'),
     ('http', 'https://app.evisa.mn',        'SMSPro',       '#e91e63'),
+    ('http', 'http://help.it/view.php',     'Дуудлага интернет', '#e91e63'),
+    ('http', 'http://utas.it/',             'Utas',         '#e91e63'),
     ('http', 'https://ajil.it/',            'TeamProgress', '#e91e63'),
     ('http', 'https://evisa.mn',            'eVisa',        '#e91e63'),
     ('http', 'https://immigration.gov.mn',  b'ГИХГ сайт',   '#e91e63'),
